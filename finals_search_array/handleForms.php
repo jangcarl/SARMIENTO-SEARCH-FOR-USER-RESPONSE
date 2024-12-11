@@ -4,7 +4,7 @@ require_once 'dbConfig.php';
 require_once 'models.php';
 
 if (isset($_POST['insertUserBtn'])) {
-    $insertUser = insertNewUser($pdo, $_POST['first_name'], $_POST['last_name'], $_POST['phone_number'], $_POST['years_experience'], $_POST['licenses'], $_POST['certifications'], $_POST['education'], $_POST['desired_salary']);
+    $insertUser = insertNewUser($pdo, $_POST['first_name'], $_POST['last_name'], $_POST['phone_number'], $_POST['years_experience'], $_POST['medical_license'], $_POST['certifications'], $_POST['education'], $_POST['desired_salary']);
 
     if ($insertUser) {
         $_SESSION['message'] = "Successfully Inserted!";
@@ -18,7 +18,7 @@ if (isset($_POST['insertUserBtn'])) {
 }
 
 if (isset($_POST['editUserBtn'])) {
-    $editUser = editUser($pdo, $_POST['first_name'], $_POST['last_name'], $_POST['date_added'], $_POST['phone_number'], $_POST['years_experience'], $_POST['licenses'], $_POST['certifications'], $_POST['education'], $_POST['desired_salary'], $_GET['applicant_id']);
+    $editUser = editUser($pdo, $_POST['first_name'], $_POST['last_name'], $_POST['date_added'], $_POST['phone_number'], $_POST['years_experience'], $_POST['medical_license'], $_POST['certifications'], $_POST['education'], $_POST['desired_salary'], $_GET['applicant_id']);
 
     if ($editUser) {
         $_SESSION['message'] = "Successfully Edited!";
@@ -49,17 +49,17 @@ if (isset($_GET['searchBtn'])) {
     $searchForAUser = searchForAUser($pdo, $_GET['searchInput']);
     foreach ($searchForAUser as $row) {
         echo "<tr> 
-				<td>{$row['applicant_id']}</td>
-				<td>{$row['first_name']}</td>
-				<td>{$row['last_name']}</td>
-				<td>{$row['date_added']}</td>
-				<td>{$row['phone_number']}</td>
-				<td>{$row['years_experience']}</td>
-				<td>{$row['licenses']}</td>
-				<td>{$row['certifications']}</td>
-				<td>{$row['educations']}</td>
+                <td>{$row['applicant_id']}</td>
+                <td>{$row['first_name']}</td>
+                <td>{$row['last_name']}</td>
+                <td>{$row['date_added']}</td>
+                <td>{$row['phone_number']}</td>
+                <td>{$row['years_experience']}</td>
+                <td>{$row['medical_license']}</td>
+                <td>{$row['certifications']}</td>
+                <td>{$row['education']}</td>
                 <td>{$row['desired_salary']}</td>
-			  </tr>";
+              </tr>";
     }
 }
 
@@ -114,6 +114,10 @@ if (isset($_POST['loginUserBtn'])) {
             if (password_verify($password, $passwordFromDB)) {
                 $_SESSION['username'] = $usernameFromDB;
                 header("Location: ../index.php");
+            } else {
+                $_SESSION['message'] = "Invalid login credentials.";
+                $_SESSION['status'] = "400";
+                header("Location: ../login.php");
             }
         } else {
             $_SESSION['message'] = $loginQuery['message'];
