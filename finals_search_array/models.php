@@ -22,7 +22,7 @@ function getUserByID($pdo, $applicant_id)
 
 function searchForAUser($pdo, $searchQuery)
 {
-    $sql = "SELECT * FROM applicants WHERE CONCAT(first_name,last_name,date_added,phone_number,years_experience,licenses,certifications,education,desired_salary) LIKE ?";
+    $sql = "SELECT * FROM applicants WHERE CONCAT(first_name, last_name, date_added, phone_number, years_experience, medical_license, certifications, education, desired_salary) LIKE ?";
 
     $stmt = $pdo->prepare($sql);
     $executeQuery = $stmt->execute(["%" . $searchQuery . "%"]);
@@ -31,7 +31,7 @@ function searchForAUser($pdo, $searchQuery)
     }
 }
 
-function insertNewUser($pdo, $first_name, $last_name, $phone_number, $years_experience, $licenses, $certifications, $education, $desired_salary)
+function insertNewUser($pdo, $first_name, $last_name, $phone_number, $years_experience, $medical_license, $certifications, $education, $desired_salary)
 {
     $checkSql = "SELECT COUNT(*) FROM applicants WHERE first_name = ? OR last_name = ? OR phone_number = ?";
 
@@ -43,34 +43,34 @@ function insertNewUser($pdo, $first_name, $last_name, $phone_number, $years_expe
         return false;
     }
 
-    $sql = "INSERT INTO applicants (first_name,last_name,phone_number,years_experience,licenses,certifications,education,desired_salary) VALUES (?,?,?,?,?,?,?,?)";
+    $sql = "INSERT INTO applicants (first_name, last_name, phone_number, years_experience, medical_license, certifications, education, desired_salary) VALUES (?,?,?,?,?,?,?,?)";
 
     $stmt = $pdo->prepare($sql);
-    $execiteQuery = $stmt->execute([$first_name, $last_name, $phone_number, $years_experience, $licenses, $certifications, $education, $desired_salary]);
+    $executeQuery = $stmt->execute([$first_name, $last_name, $phone_number, $years_experience, $medical_license, $certifications, $education, $desired_salary]);
 
-    if ($execiteQuery) {
+    if ($executeQuery) {
         return true;
     } else {
         return false;
     }
 }
 
-function editUser($pdo, $first_name, $last_name, $date_added, $phone_number, $years_experience, $licenses, $certifications, $education, $desired_salary, $applicant_id)
+function editUser($pdo, $first_name, $last_name, $date_added, $phone_number, $years_experience, $medical_license, $certifications, $education, $desired_salary, $applicant_id)
 {
     $sql = "UPDATE applicants 
-                SET first_name = ?, 
-                    last_name = ?, 
-                    date_added = ?, 
-                    phone_number = ?,
-                    years_experience = ?,
-                    licenses = ?,
-                    certifications = ?,
-                    education = ?,
-                    desired_salary = ?
-                WHERE applicant_id = ?";
+            SET first_name = ?, 
+                last_name = ?, 
+                date_added = ?, 
+                phone_number = ?,
+                years_experience = ?,
+                medical_license = ?,
+                certifications = ?,
+                education = ?,
+                desired_salary = ?
+            WHERE applicant_id = ?";
 
     $stmt = $pdo->prepare($sql);
-    $executeQuery = $stmt->execute([$first_name, $last_name, $date_added, $phone_number, $years_experience, $licenses, $certifications, $education, $desired_salary, $applicant_id]);
+    $executeQuery = $stmt->execute([$first_name, $last_name, $date_added, $phone_number, $years_experience, $medical_license, $certifications, $education, $desired_salary, $applicant_id]);
 
     if ($executeQuery) {
         return true;
@@ -106,13 +106,12 @@ function checkIfUserExists($pdo, $username)
         } else {
             $response = array(
                 "status" => "400",
-                "message" => "This user doesn't exist from the database."
+                "message" => "This user doesn't exist in the database."
             );
         }
     }
 
     return $response;
-
 }
 
 function insertNewUserAcc($pdo, $username, $first_name, $last_name, $password)
